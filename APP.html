@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JQ POWER | 5-Min Pitch Deck</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        theme: '#00E53F',
+                        'theme-dark': '#00b331',
+                        dark: '#050505',
+                        gray: '#f5f5f7'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --jq-green: #00E53F;
+            --jq-dark: #050505;
+        }
+
+        body {
+            background-color: var(--jq-dark);
+            color: white;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Presentation Progress Bar */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--jq-green);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 10px var(--jq-green);
+        }
+
+        /* Brutalist Typography */
+        .font-brutal { font-weight: 900; letter-spacing: -0.05em; line-height: 0.9; }
+        
+        /* Premium Smoothed Easing (Apple-like) */
+        .apple-ease { transition: all 1.5s cubic-bezier(0.22, 1, 0.36, 1); }
+
+        /* Complex Scroll Reveals */
+        .reveal-up { opacity: 0; transform: translateY(60px) scale(0.95); }
+        .reveal-up.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        .reveal-left { opacity: 0; transform: translateX(-80px); }
+        .reveal-left.active { opacity: 1; transform: translateX(0); }
+
+        .reveal-right { opacity: 0; transform: translateX(80px); }
+        .reveal-right.active { opacity: 1; transform: translateX(0); }
+
+        /* Fix for Team Banners - Smooth Horizontal Slide */
+        .reveal-banner { opacity: 0; transform: translateX(-120px); }
+        .reveal-banner.active { opacity: 1; transform: translateX(0); }
+
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+        .delay-400 { transition-delay: 0.4s; }
+        .delay-500 { transition-delay: 0.5s; }
+
+        /* Speaker Badge */
+        .speaker-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #fff;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .speaker-badge span { color: var(--jq-green); }
+
+        /* Script Panel */
+        .script-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+            opacity: 0;
+        }
+        .script-panel.open {
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 1.5rem;
+        }
+
+        /* Sticky Stacking Cards */
+        .sticky-card { position: sticky; top: 12vh; }
+
+        /* Radar Pulse */
+        .radar-pulse {
+            box-shadow: 0 0 0 0 rgba(0, 229, 63, 0.7);
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(0, 229, 63, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 229, 63, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 229, 63, 0); }
+        }
+        
+        /* Red Radar Pulse */
+        .radar-pulse-red {
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            animation: pulse-ring-red 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* Interactive Map Marker Hover */
+        .map-marker {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .map-marker:hover {
+            transform: scale(1.5);
+            z-index: 50;
+        }
+
+        /* Mockup Phone CSS */
+        .mockup-phone {
+            width: 320px;
+            height: 680px;
+            border: 12px solid #1a1a1a;
+            border-radius: 45px;
+            background-color: #000;
+            position: relative;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.9), inset 0 0 0 2px #333;
+            overflow: hidden;
+        }
+        .mockup-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 25px;
+            background-color: #1a1a1a;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            z-index: 50;
+        }
+
+        /* Hardware Wireframe Glow */
+        .hardware-glow {
+            background: radial-gradient(circle at center, rgba(0,229,63,0.15) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body class="selection:bg-theme selection:text-black">
+
+    <!-- Progress Bar for Presentation -->
+    <div id="progress-bar"></div>
+
+    <!-- GLOBAL NAVIGATION -->
+    <nav class="fixed top-0 w-full z-50 p-6 md:px-12 mix-blend-difference text-white flex justify-between items-center text-sm md:text-base font-bold tracking-tight">
+        <div class="flex gap-2 items-start group cursor-pointer">
+            <span class="font-brutal text-xl">JQ</span>
+            <span class="text-[10px] bg-white text-black px-1.5 py-0.5 rounded-sm leading-tight mt-1 group-hover:bg-theme transition-colors">POWER</span>
+        </div>
+        <!-- Internal Presentation Nav -->
+        <div class="hidden md:flex gap-8 font-mono text-[10px] uppercase tracking-widest text-gray-400">
+            <a href="#home" class="hover:text-theme transition-colors">Home</a>
+            <a href="#team" class="hover:text-theme transition-colors">Team</a>
+            <a href="#spk1" class="hover:text-theme transition-colors">1. Crisis</a>
+            <a href="#spk2" class="hover:text-theme transition-colors">2. System</a>
+            <a href="#spk3" class="hover:text-theme transition-colors">3. Hardware</a>
+            <a href="#spk4" class="hover:text-theme transition-colors">4. Safety Eco</a>
+            <a href="#spk5" class="hover:text-theme transition-colors">5. UI & QnA</a>
+        </div>
+        <div class="bg-theme text-black px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider hover:bg-white hover:scale-105 transition-all cursor-pointer">
+            Pitch Deck
+        </div>
+    </nav>
+
+    <!-- ================= HOME: HERO SECTION ================= -->
+    <section id="home" class="min-h-screen w-full relative overflow-hidden bg-[#050505] text-white flex flex-col justify-center px-6 md:px-12 pt-20">
+        <!-- Background: High-End Minimalist City/Architecture -->
+        <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=2000&q=80')] bg-cover bg-center opacity-30 transition-transform duration-[15s] hover:scale-105 mix-blend-luminosity"></div>
+        <div class="absolute inset-0 z-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent"></div>
+
+        <div class="z-10 w-full max-w-[1600px] mx-auto relative flex flex-col justify-center h-full">
+            
+            <div class="mb-4 apple-ease reveal-left">
+                <p class="text-theme font-mono text-sm tracking-widest uppercase mb-2">Jol Qauipsizdigi Initiative</p>
+                <p class="text-xl md:text-2xl text-gray-400 font-medium border-l-2 border-white pl-4 max-w-lg">
+                    Re-engineering road safety through high-tech telemetry, behavioral economics, and autonomous intervention.
+                </p>
+            </div>
+            
+            <!-- Massive Typography Block -->
+            <div class="font-brutal uppercase text-[24vw] md:text-[16vw] leading-[0.85] tracking-tighter flex flex-col w-full mt-8">
+                <!-- Row 1: JQ + Image -->
+                <div class="flex items-center gap-4 md:gap-8 w-full justify-start apple-ease reveal-right delay-100">
+                    <span class="text-white drop-shadow-2xl">JQ</span>
+                    <div class="h-[14vw] md:h-[11vw] w-[40vw] md:flex-1 rounded-full overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform hover:scale-[1.02] transition-transform duration-700 ml-2 md:ml-0">
+                        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center grayscale hover:grayscale-0 transition-all duration-700 scale-105"></div>
+                    </div>
+                </div>
+                <!-- Row 2: POWER -->
+                <div class="flex items-center gap-4 md:gap-8 w-full justify-end mt-2 md:mt-0 apple-ease reveal-left delay-200">
+                    <div class="h-[2px] flex-1 bg-gray-800 hidden md:block ml-4 relative">
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 bg-theme rounded-full radar-pulse"></div>
+                    </div>
+                    <span class="text-transparent" style="-webkit-text-stroke: 2px #00E53F;">POWER</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= TEAM MEMBERS SECTION (Diagonal Banners) ================= -->
+    <section id="team" class="min-h-screen py-32 bg-[#050505] text-white border-t border-gray-900 relative overflow-hidden flex flex-col justify-center">
+        <div class="max-w-7xl mx-auto px-6 w-full relative z-10">
+            <div class="speaker-badge mb-16 apple-ease reveal-up"><span>●</span> The Core Team</div>
+            
+            <!-- Diagonal Staggered Banner Container -->
+            <div class="flex flex-col gap-5 w-full transform-gpu -rotate-3 origin-left pl-2 md:pl-10">
+                
+                <div class="apple-ease reveal-banner delay-100 bg-theme text-black py-4 px-8 w-[95%] md:w-[75%] font-brutal text-3xl md:text-5xl lg:text-6xl uppercase shadow-[0_20px_40px_rgba(0,0,0,0.8)] rounded-r-3xl border-l-[12px] border-white flex items-center justify-between gap-6 group">
+                    <div class="flex items-center gap-6"><i class="ph-fill ph-user-focus text-black/30 text-4xl hidden sm:block"></i> Qultayev Ansar</div>
+                    <span class="text-xs md:text-sm font-mono font-bold tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">CEO / Founder</span>
+                </div>
+                
+                <div class="apple-ease reveal-banner delay-200 bg-white text-black py-4 px-8 w-[95%] md:w-[75%] font-brutal text-3xl md:text-5xl lg:text-6xl uppercase shadow-[0_20px_40px_rgba(0,0,0,0.8)] rounded-r-3xl border-l-[12px] border-theme ml-[4%] md:ml-[8%] flex items-center justify-between gap-6 group">
+                    <div class="flex items-center gap-6"><i class="ph-fill ph-user-focus text-black/10 text-4xl hidden sm:block"></i> Qadyr Nurdaulet</div>
+                    <span class="text-xs md:text-sm font-mono font-bold tracking-widest text-theme opacity-0 group-hover:opacity-100 transition-opacity">CTO / Hardware</span>
+                </div>
+                
+                <div class="apple-ease reveal-banner delay-300 bg-[#1a1a1a] text-white py-4 px-8 w-[95%] md:w-[75%] font-brutal text-3xl md:text-5xl lg:text-6xl uppercase shadow-[0_20px_40px_rgba(0,0,0,0.8)] rounded-r-3xl border-l-[12px] border-theme ml-[8%] md:ml-[16%] flex items-center justify-between gap-6 group">
+                    <div class="flex items-center gap-6"><i class="ph-fill ph-user-focus text-white/20 text-4xl hidden sm:block"></i> Zhumaben Zhanibek</div>
+                    <span class="text-xs md:text-sm font-mono font-bold tracking-widest text-theme opacity-0 group-hover:opacity-100 transition-opacity">Head of AI / Data</span>
+                </div>
+                
+                <div class="apple-ease reveal-banner delay-400 bg-theme text-black py-4 px-8 w-[95%] md:w-[75%] font-brutal text-3xl md:text-5xl lg:text-6xl uppercase shadow-[0_20px_40px_rgba(0,0,0,0.8)] rounded-r-3xl border-l-[12px] border-white ml-[12%] md:ml-[24%] flex items-center justify-between gap-6 group">
+                    <div class="flex items-center gap-6"><i class="ph-fill ph-user-focus text-black/30 text-4xl hidden sm:block"></i> Zharylkasyn Eskendir</div>
+                    <span class="text-xs md:text-sm font-mono font-bold tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Lead Developer</span>
+                </div>
+                
+                <div class="apple-ease reveal-banner delay-500 bg-white text-black py-4 px-8 w-[95%] md:w-[75%] font-brutal text-3xl md:text-5xl lg:text-6xl uppercase shadow-[0_20px_40px_rgba(0,0,0,0.8)] rounded-r-3xl border-l-[12px] border-theme ml-[16%] md:ml-[32%] flex items-center justify-between gap-6 group">
+                    <div class="flex items-center gap-6"><i class="ph-fill ph-user-focus text-black/10 text-4xl hidden sm:block"></i> Qanatbek Talgat</div>
+                    <span class="text-xs md:text-sm font-mono font-bold tracking-widest text-theme opacity-0 group-hover:opacity-100 transition-opacity">Operations / Strategy</span>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SPEAKER 1: INTRODUCTION & CRISIS (0:00 - 1:00) ================= -->
+    <section id="spk1" class="min-h-screen w-full relative overflow-hidden bg-[#0a0f0d] text-white flex flex-col justify-center px-6 md:px-12 py-20 border-t border-gray-900">
+        
+        <div class="z-10 w-full max-w-7xl mx-auto relative flex flex-col justify-center h-full">
+            
+            <div class="apple-ease reveal-left flex flex-col items-start mb-12">
+                <div class="speaker-badge"><span>●</span> Speaker 1 : The Crisis</div>
+                <button onclick="toggleScript('script1')" class="bg-white/10 hover:bg-theme hover:text-black border border-white/20 text-white font-mono text-xs px-4 py-2 rounded-lg transition-all flex items-center gap-2 mb-6">
+                    <i class="ph-bold ph-quotes"></i> View 40s Pitch Script
+                </button>
+                
+                <!-- SCRIPT PANEL -->
+                <div id="script1" class="script-panel w-full max-w-3xl bg-black/60 backdrop-blur-xl border border-theme/30 rounded-2xl p-6 shadow-2xl">
+                    <p class="text-gray-300 text-lg leading-relaxed italic font-serif">
+                        "Good morning. Look at this number: 1 out of every 22 cars in Kazakhstan was involved in an accident last year. Official police records show 15,886 casualties. But when we look at actual insurance claims? It's over 92,000. That is an 83% hidden crisis, costing our economy an estimated 1.2 Trillion KZT annually. <br><br>The root cause? Over 85% of these severe accidents are caused entirely by human error. As a nation, we are expanding our fleet, but failing to protect the people inside them. The old ways of reactive fines are not working. We need a systemic, technological intervention. That is why we built JQ Power."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Intro Text -->
+            <div class="mb-12 apple-ease reveal-right delay-100 flex justify-end text-right w-full">
+                <div class="max-w-2xl">
+                    <h2 class="text-4xl md:text-6xl font-brutal leading-none mb-6">THE 83% HIDDEN CRISIS.</h2>
+                    <p class="text-xl text-gray-400 font-medium">
+                        The gap between official statistics and actual insurance claims reveals a critical vulnerability in our national infrastructure, amounting to massive economic and human loss.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Enhanced Data Grid for Speaker 1 (Data from Report) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full mt-10">
+                
+                <div class="apple-ease reveal-left delay-200 bg-white/5 border border-white/10 p-8 rounded-[2rem] backdrop-blur-md relative overflow-hidden group hover:border-theme/50 transition-colors shadow-2xl">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-theme/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-theme/30 transition-colors"></div>
+                    <div class="text-theme font-brutal text-6xl mb-2 tracking-tighter">92K+</div>
+                    <div class="text-gray-300 text-sm font-mono uppercase tracking-widest font-bold">Actual Incidents</div>
+                    <div class="text-xs text-gray-500 mt-4 leading-relaxed border-t border-white/10 pt-4">Based on 2023-2024 mandatory insurance claims (OGPO VTS), exposing the true scale.</div>
+                </div>
+                
+                <div class="apple-ease reveal-up delay-300 bg-white/5 border border-white/10 p-8 rounded-[2rem] backdrop-blur-md relative overflow-hidden group hover:border-red-500/50 transition-colors shadow-2xl">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-red-500/30 transition-colors"></div>
+                    <div class="text-red-500 font-brutal text-6xl mb-2 tracking-tighter">>85%</div>
+                    <div class="text-gray-300 text-sm font-mono uppercase tracking-widest font-bold">Human Error</div>
+                    <div class="text-xs text-gray-500 mt-4 leading-relaxed border-t border-white/10 pt-4">Attributed directly to driver fatigue, extreme speeding, and behavioral risks on highways.</div>
+                </div>
+                
+                <div class="apple-ease reveal-up delay-400 bg-white/5 border border-white/10 p-8 rounded-[2rem] backdrop-blur-md relative overflow-hidden group hover:border-theme/50 transition-colors shadow-2xl">
+                    <div class="text-white font-brutal text-6xl mb-2 tracking-tighter">1<span class="text-3xl text-gray-500">/22</span></div>
+                    <div class="text-gray-300 text-sm font-mono uppercase tracking-widest font-bold">Crash Probability</div>
+                    <div class="text-xs text-gray-500 mt-4 leading-relaxed border-t border-white/10 pt-4">An extreme probability per registered vehicle annually in major urban centers.</div>
+                </div>
+                
+                <div class="apple-ease reveal-right delay-500 bg-white/5 border border-white/10 p-8 rounded-[2rem] backdrop-blur-md relative overflow-hidden shadow-2xl">
+                    <div class="text-gray-600 font-brutal text-6xl mb-2 tracking-tighter">15.8K</div>
+                    <div class="text-gray-500 text-sm font-mono uppercase tracking-widest font-bold">Official Records</div>
+                    <div class="text-xs text-gray-600 mt-4 leading-relaxed border-t border-white/5 pt-4">Represents only ~17% of total actual road incidents, creating a false sense of security.</div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- ================= SPEAKER 2: COMMAND CENTER (1:00 - 2:00) ================= -->
+    <section id="spk2" class="min-h-screen w-full flex flex-col bg-[#050505] text-white overflow-hidden relative py-20 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-6 w-full apple-ease reveal-left z-10 mb-8">
+            <div class="speaker-badge mb-6"><span>●</span> Speaker 2 : The Core Ecosystem</div>
+            
+            <div class="flex flex-col md:flex-row gap-8 justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-5xl md:text-7xl font-brutal leading-none mb-4">COMMAND<br/>CENTER.</h2>
+                    <button onclick="toggleScript('script2')" class="bg-white/10 hover:bg-theme hover:text-black border border-white/20 text-white font-mono text-xs px-4 py-2 rounded-lg transition-all flex items-center gap-2">
+                        <i class="ph-bold ph-quotes"></i> View 40s Pitch Script
+                    </button>
+                </div>
+                <div class="text-lg text-gray-400 font-medium max-w-xl md:text-right apple-ease reveal-right delay-200">
+                    <p class="mb-2">Interactive live map processing millions of telemetry points from local infrastructure.</p>
+                    <p class="text-sm text-theme font-mono">Ingestion Rate: 12.4M endpoints/sec | Latency: 4ms</p>
+                </div>
+            </div>
+            
+            <div id="script2" class="script-panel w-full bg-black/60 backdrop-blur-xl border border-theme/30 rounded-2xl p-6 shadow-2xl mb-8">
+                <p class="text-gray-300 text-lg leading-relaxed italic font-serif">
+                    "To solve this, we built the JQ Command Center. What you see here is a live ecosystem. We ingest millions of telemetry points to identify 'death zones'—like the undivided Almaty-Shymkent highway. <br><br>In Astana alone, the crash density is a staggering 5.16%. By tracking these metrics, we don't just react to accidents; we predict where they are most likely to happen based on weather and infrastructure. We act as an omniscient layer of safety, integrating directly with MVD databases to keep our fleets out of harm's way."
+                </p>
+            </div>
+        </div>
+
+        <!-- Full-Width Map Area with Interactive Overlays -->
+        <div class="w-full px-6 flex-1 flex flex-col justify-center apple-ease reveal-up delay-300 pb-10">
+            <div class="w-full relative rounded-[2rem] overflow-hidden border border-gray-800 shadow-[0_30px_100px_rgba(0,229,63,0.15)] bg-[#111]">
+                
+                <!-- STATIC BACKGROUND MAP IMAGE -->
+                <img src="https://i.ibb.co.com/v4rXwZB8/image.png" 
+                     alt="JQ Command Center Live Map" 
+                     class="w-full h-auto object-contain block opacity-90 transition-opacity duration-1000">
+                
+                <!-- MAP OVERLAY UI PANEL (Changes based on clicks) -->
+                <div class="absolute top-6 left-6 z-20 bg-black/80 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl w-[280px] md:w-[320px] transition-all duration-300" id="map-info-panel">
+                    <div class="flex justify-between items-start mb-4 border-b border-gray-800 pb-3">
+                        <div class="flex items-center gap-2 text-theme font-bold text-sm uppercase tracking-widest">
+                            <i class="ph-fill ph-radar"></i> <span id="overlay-title">Live Telemetry</span>
+                        </div>
+                        <span class="w-2 h-2 bg-theme rounded-full radar-pulse"></span>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs font-mono mb-1 text-gray-400">
+                                <span>Risk Assessment</span>
+                                <span id="overlay-risk" class="text-theme font-bold">Stable</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden">
+                                <div id="overlay-bar" class="h-full bg-theme w-[30%] transition-all duration-700"></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 pt-2">
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/5">
+                                <div class="text-[10px] text-gray-500 font-mono uppercase">Active Nodes</div>
+                                <div id="overlay-nodes" class="text-white font-bold text-lg">12.4M</div>
+                            </div>
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/5">
+                                <div class="text-[10px] text-gray-500 font-mono uppercase">Interventions</div>
+                                <div id="overlay-interventions" class="text-white font-bold text-lg">4,210</div>
+                            </div>
+                        </div>
+                        <p id="overlay-desc" class="text-xs text-gray-500 mt-2 italic">Global view covering major metropolitan sectors and highways.</p>
+                    </div>
+                </div>
+                
+                <!-- INTERACTIVE MARKERS ON THE MAP -->
+                <!-- Zone 1: Astana Center (Medium Risk) -->
+                <div class="map-marker absolute top-[40%] left-[55%] z-30 group" onclick="updateMapOverlay('Astana Center Sector', 'Elevated', '65%', 'bg-yellow-500', 'text-yellow-500', '3.2M', '1,420', 'High density urban traffic. Predictive models indicate slight increase in fender-benders.')">
+                    <div class="w-6 h-6 bg-yellow-500/20 rounded-full flex items-center justify-center border border-yellow-500/50 radar-pulse shadow-[0_0_15px_rgba(234,179,8,0.5)]">
+                        <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Zone 2: Industrial Highway (Critical Risk) -->
+                <div class="map-marker absolute top-[65%] left-[45%] z-30 group" onclick="updateMapOverlay('Highway A3 / Shymkent', 'Critical', '95%', 'bg-red-500', 'text-red-500', '850K', '2,105', 'Death Zone alert active. Severe weather warnings combined with high-speed freight transport.')">
+                    <div class="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center border border-red-500/50 radar-pulse-red shadow-[0_0_20px_rgba(239,68,68,0.7)]">
+                        <div class="w-3 h-3 bg-red-600 rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Zone 3: Eastern Suburbs (Low Risk) -->
+                <div class="map-marker absolute top-[30%] left-[75%] z-30 group" onclick="updateMapOverlay('Eastern Suburbs', 'Stable', '25%', 'bg-theme', 'text-theme', '1.1M', '124', 'Traffic flowing optimally. No significant hazards detected in the last 12 hours.')">
+                    <div class="w-5 h-5 bg-theme/20 rounded-full flex items-center justify-center border border-theme/50 radar-pulse shadow-[0_0_10px_rgba(0,229,63,0.5)]">
+                        <div class="w-1.5 h-1.5 bg-theme rounded-full"></div>
+                    </div>
+                </div>
+                
+                <!-- Ambient Dark Gradient Overlay at Bottom to ground the map -->
+                <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#111] to-transparent pointer-events-none"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SPEAKER 3: AUTOPILOT RETROFIT (2:00 - 3:00) ================= -->
+    <section id="spk3" class="min-h-screen w-full flex items-center bg-[#f5f5f7] text-black overflow-hidden relative py-20 border-t border-gray-200">
+        <div class="absolute inset-0 opacity-[0.03] bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=2000&q=80')] bg-cover bg-center mix-blend-multiply"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10 w-full">
+            <div class="flex flex-col items-start apple-ease reveal-left">
+                <div class="speaker-badge !bg-black/5 !border-black/10 !text-black mb-6">
+                    <span>●</span> Speaker 3 : The Ultimate Hardware
+                </div>
+                <button onclick="toggleScript('script3')" class="bg-black text-white hover:bg-theme hover:text-black font-mono text-xs px-4 py-2 rounded-lg transition-all flex items-center gap-2 mb-8">
+                    <i class="ph-bold ph-quotes"></i> View 40s Pitch Script
+                </button>
+                
+                <div id="script3" class="script-panel w-full max-w-3xl bg-white border border-gray-200 rounded-2xl p-6 shadow-xl mb-8">
+                    <p class="text-gray-800 text-lg leading-relaxed italic font-serif">
+                        "Software alone isn't enough to eliminate that 85% human error. That brings us to our most disruptive innovation: The Autopilot Retrofit. <br><br>In future, at our Modification Center in Astana, we take standard fleet vehicles and install a proprietary, plug-and-play hardware module directly into the OBD-II and CAN bus systems. This instantly grants the vehicle Level 3+ autonomous safety features—like automatic emergency braking—offered as a Hardware-as-a-Service subscription for just 16,000 tenge a month. We are upgrading the existing national fleet today."
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="apple-ease reveal-left delay-100">
+                    <div class="inline-block bg-theme text-black font-mono text-xs font-bold px-3 py-1 rounded mb-6 uppercase tracking-widest shadow-sm">Our Biggest Innovation</div>
+                    <h2 class="text-5xl md:text-7xl font-brutal leading-[0.9] mb-8">AUTOPILOT<br/>RETROFIT.</h2>
+                    <p class="text-xl text-gray-700 font-medium mb-6">
+                        We don't just build software. In our <strong class="text-black bg-theme/30 px-1">Astana Modification Center</strong>, we install a proprietary plug-and-play hardware module into existing standard vehicles, transforming them instantly.
+                    </p>
+                    <ul class="space-y-4 font-bold text-sm uppercase tracking-wide mb-10">
+                        <li class="flex items-center gap-3 apple-ease reveal-right delay-200"><i class="ph-fill ph-plugs-connected text-2xl text-blue-600"></i> Direct OBD-II & CAN-bus Write Access</li>
+                        <li class="flex items-center gap-3 apple-ease reveal-right delay-300"><i class="ph-fill ph-steering-wheel text-2xl text-theme"></i> Level 3+ Autonomous Driving (< 10ms Latency)</li>
+                        <li class="flex items-center gap-3 apple-ease reveal-right delay-400"><i class="ph-fill ph-cpu text-2xl text-purple-600"></i> Neural Processing Unit (NPU) Edge Computing</li>
+                        <li class="flex items-center gap-3 apple-ease reveal-right delay-500"><i class="ph-fill ph-credit-card text-2xl text-black"></i> Hardware-as-a-Service (B2B Fleet Subscription)</li>
+                    </ul>
+                </div>
+
+                <div class="relative w-full h-[500px] bg-black rounded-[2.5rem] p-0 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.3)] apple-ease reveal-right delay-300 group flex items-end">
+                    <img src="https://ace.aaa.com/content/dam/ace/advocacy/headers/1264078576-self-driving-car-illustration-3d-render-1280x420.jpg" alt="Autopilot Visualization" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none"></div>
+                    
+                    <!-- HIGH-END WARNING HUD OVERLAY -->
+                    <div class="absolute top-[20%] left-[10%] md:top-[25%] md:left-[15%] z-20 pointer-events-none apple-ease reveal-up delay-400">
+                        <div class="bg-black/50 backdrop-blur-xl border border-red-500/40 p-4 md:p-6 rounded-3xl shadow-[0_20px_50px_rgba(239,68,68,0.4)] flex flex-col items-center group-hover:bg-black/70 transition-colors duration-700">
+                            <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-3 radar-pulse-red border border-red-500/50">
+                                <i class="ph-fill ph-warning-octagon text-red-500 text-4xl drop-shadow-[0_0_15px_rgba(239,68,68,1)]"></i>
+                            </div>
+                            <div class="text-red-500 font-mono text-[10px] md:text-xs uppercase tracking-[0.3em] font-bold text-center">
+                                Hazard Detected<br>
+                                <span class="text-white text-[9px] md:text-[10px] bg-red-600/20 px-2 py-0.5 rounded mt-1 inline-block border border-red-500/30">Auto-Brake Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-0 hardware-glow opacity-50 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                    
+                    <div class="absolute top-6 right-6 z-10 bg-black/60 backdrop-blur-md border border-white/10 p-3 rounded-xl flex items-center gap-3 shadow-lg">
+                        <div class="w-3 h-3 bg-theme rounded-full radar-pulse"></div>
+                        <span class="text-xs font-mono text-white tracking-widest uppercase font-bold">Military-Grade Encryption</span>
+                    </div>
+                    
+                    <div class="relative w-full p-6 z-10">
+                        <div class="bg-[#111]/90 backdrop-blur-xl border border-gray-800 rounded-xl p-5 flex justify-between items-center shadow-2xl">
+                            <div>
+                                <p class="text-white font-bold text-sm flex items-center gap-2"><i class="ph-fill ph-cpu text-theme text-xl"></i> JQ Core Module v1.0</p>
+                                <p class="text-gray-400 text-xs font-mono mt-1">Status: Ready for fleet deployment</p>
+                            </div>
+                            <div class="text-theme font-mono text-sm font-bold bg-theme/10 border border-theme/20 px-4 py-2 rounded-lg">16,000 KZT / mo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SPEAKER 4: SAFETY ECOSYSTEM (3:00 - 4:00) ================= -->
+    <section id="spk4" class="relative bg-black py-24 text-white border-t border-gray-900 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <div class="flex flex-col items-start apple-ease reveal-left">
+                <div class="speaker-badge"><span>●</span> Speaker 4 : The Safety Ecosystem</div>
+                <button onclick="toggleScript('script4')" class="bg-white/10 hover:bg-theme hover:text-black border border-white/20 text-white font-mono text-xs px-4 py-2 rounded-lg transition-all flex items-center gap-2 mb-8">
+                    <i class="ph-bold ph-quotes"></i> View 40s Pitch Script
+                </button>
+                
+                <div id="script4" class="script-panel w-full max-w-3xl bg-[#111] border border-gray-800 rounded-2xl p-6 shadow-2xl mb-10">
+                    <p class="text-gray-300 text-lg leading-relaxed italic font-serif">
+                        "We are also redefining the economics of safety. We introduce the 'Safety Bid'. If our map detects an accident ahead on Raiymbek Ave, the app gives the passenger a choice: take the risky route, or pay slightly more for a verified safe detour.<br><br>Furthermore, we built 'Acoustic Radar'. In our continental climate, cameras are easily blinded by snow. JQ Power uses the smartphone's microphone to analyze the frequency of tire friction on the road. We can literally hear Black Ice 50 meters before the driver can see it."
+                    </p>
+                </div>
+            </div>
+
+            <div class="mb-16 apple-ease reveal-right delay-100 flex justify-end w-full text-right">
+                <h2 class="text-5xl md:text-8xl font-brutal leading-none text-white">
+                    UNIQUE RULES.<br/>
+                    <span class="text-gray-600">ZERO COMPROMISE.</span>
+                </h2>
+            </div>
+
+            <div class="relative">
+                <!-- Feature: Dynamic Tariff -->
+                <div class="sticky-card top-[12vh] min-h-[50vh] w-full rounded-[2.5rem] p-0 mb-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col md:flex-row gap-0 border border-gray-800 bg-[#0a0a0a] overflow-hidden group">
+                    <div class="w-full md:w-1/2 flex flex-col justify-center p-8 md:p-12 z-10 apple-ease reveal-left delay-200">
+                        <div class="text-sm md:text-lg font-bold mb-2 text-theme uppercase tracking-widest flex items-center gap-2">
+                            <i class="ph-fill ph-coins"></i> Dynamic Tariff
+                        </div>
+                        <h3 class="text-4xl md:text-5xl font-brutal leading-[0.9]">PRICE OF SECURITY.</h3>
+                        <p class="text-gray-400 mt-6 max-w-sm">
+                            Instead of simple bargaining, we introduce the proprietary <span class="text-white font-bold bg-gray-800 px-2 rounded">Safety Bid Algorithm</span>. Choose a longer, safer route avoiding AI-predicted accidents, and automatically earn partner insurance discounts.
+                        </p>
+                        <div class="mt-6 flex gap-3 text-xs font-mono text-gray-500">
+                            <span class="bg-[#111] px-3 py-1 rounded-full border border-gray-800">Dynamic Pricing Engine</span>
+                            <span class="bg-[#111] px-3 py-1 rounded-full border border-gray-800">B2B API Integration</span>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 relative bg-[url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1000&q=80')] bg-cover bg-center grayscale opacity-60 apple-ease reveal-right delay-300 transform group-hover:scale-105 transition-transform duration-1000">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] to-transparent"></div>
+                    </div>
+                </div>
+
+                <!-- Feature: Acoustic Radar -->
+                <div class="sticky-card top-[16vh] min-h-[50vh] w-full rounded-[2.5rem] p-0 mb-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col md:flex-row gap-0 border border-gray-800 bg-[#0a0a0a] overflow-hidden group">
+                    <div class="w-full md:w-1/2 h-48 md:h-auto relative order-2 md:order-1 bg-[url('https://images.unsplash.com/photo-1517524206127-48bbd363f3d7?auto=format&fit=crop&w=1000&q=80')] bg-cover bg-center grayscale opacity-60 apple-ease reveal-left delay-300 transform group-hover:scale-105 transition-transform duration-1000">
+                        <div class="absolute inset-0 bg-gradient-to-l from-[#0a0a0a] to-transparent"></div>
+                    </div>
+                    <div class="w-full md:w-1/2 flex flex-col justify-center p-8 md:p-12 z-10 order-1 md:order-2 apple-ease reveal-right delay-200">
+                        <div class="text-sm md:text-lg font-bold mb-2 text-blue-500 uppercase tracking-widest flex items-center gap-2">
+                            <i class="ph-fill ph-waves"></i> Pre-Visual AI
+                        </div>
+                        <h3 class="text-4xl md:text-5xl font-brutal leading-[0.9]">ACOUSTIC RADAR.</h3>
+                        <p class="text-gray-400 mt-6 max-w-sm">
+                            Visual cameras fail in fog or snow. JQ App uses the smartphone's microphone to analyze tire friction frequency (20Hz-20kHz), predicting black ice and hydroplaning 50m ahead.
+                        </p>
+                        <div class="mt-6 flex gap-3 text-xs font-mono text-gray-500">
+                            <span class="bg-[#111] px-3 py-1 rounded-full border border-gray-800">Audio FFT Analysis</span>
+                            <span class="bg-[#111] px-3 py-1 rounded-full border border-gray-800">Zero-hardware dependency</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SPEAKER 5: INTERFACE, GUARDIAN & QnA (4:00 - 5:00) ================= -->
+    <section id="spk5" class="min-h-screen bg-[#f5f5f7] py-24 relative overflow-hidden flex flex-col">
+        <div class="max-w-7xl mx-auto px-6 w-full flex-grow flex flex-col justify-center">
+            
+            <div class="flex flex-col items-start apple-ease reveal-left">
+                <div class="speaker-badge !bg-black/5 !border-black/10 !text-black mb-8">
+                    <span>●</span> Speaker 5 : App Interface & Conclusion
+                </div>
+                <button onclick="toggleScript('script5')" class="bg-black text-white hover:bg-theme hover:text-black font-mono text-xs px-4 py-2 rounded-lg transition-all flex items-center gap-2 mb-8">
+                    <i class="ph-bold ph-quotes"></i> View 40s Pitch Script
+                </button>
+                
+                <div id="script5" class="script-panel w-full max-w-3xl bg-white border border-gray-200 rounded-2xl p-6 shadow-xl mb-10">
+                    <p class="text-gray-800 text-lg leading-relaxed italic font-serif">
+                        "Finally, the mobile app interface. It's built for total transparency. In Step 1, you choose your role. For drivers (Step 2), we expose a complete 'Vehicle Health Map' and a 'Dynamic Safety Score'—currently 91.<br><br>In Step 3, they get real-time client reports. If a passenger feels a harsh brake, the driver knows instantly. We monitor the car, the road, and the driving behavior. We are shifting the paradigm from blind trust to verifiable control. Thank you, we are JQ Power, and we are ready for your questions."
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left: Typography & Interactive UI controls -->
+                <div class="lg:col-span-7 apple-ease reveal-left delay-100 text-black order-2 lg:order-1">
+                    <h3 class="text-theme-dark text-sm md:text-lg font-bold mb-2 uppercase tracking-[0.2em] flex items-center gap-2">
+                        <i class="ph-fill ph-device-mobile"></i> The Final Touchpoint
+                    </h3>
+                    <h2 class="text-5xl md:text-7xl font-brutal leading-[0.9] mb-6">SOCIAL GUARDIAN <br>& TELEMETRY.</h2>
+                    <p class="text-lg text-gray-700 max-w-lg mb-8 font-medium">
+                        Complete transparency for the passenger. The vehicle's physical health map, dynamic behavioral scoring, and driver profile are fully exposed, ending the era of blind trust.
+                    </p>
+                    
+                    <!-- Interactive Tabs for Phone UI -->
+                    <div class="flex flex-col gap-4 max-w-md mt-4 mb-8">
+                        <button onclick="switchAppImage('https://i.ibb.co.com/fVvrBmZ9/f9218b62-dc28-48a2-a306-4da2ab6e1bf5.jpg')" class="text-left bg-white p-4 rounded-xl border border-gray-300 shadow-sm hover:border-theme hover:shadow-md transition-all font-bold flex justify-between items-center group">
+                            <span>Driver Dynamic Dashboard</span> <i class="ph-bold ph-arrow-right text-gray-400 group-hover:text-theme"></i>
+                        </button>
+                        <button onclick="switchAppImage('https://i.ibb.co.com/VWY7B6m5/552c0488-e34c-4aed-9239-2f0df049ff04.jpg')" class="text-left bg-white p-4 rounded-xl border border-gray-300 shadow-sm hover:border-theme hover:shadow-md transition-all font-bold flex justify-between items-center group">
+                            <span>Vehicle Health Map</span> <i class="ph-bold ph-arrow-right text-gray-400 group-hover:text-theme"></i>
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-200 max-w-md apple-ease reveal-up delay-300">
+                        <h4 class="font-bold text-xl mb-2 flex items-center gap-2 text-red-600">
+                            <i class="ph-fill ph-warning-circle"></i> Active SOS Intervention
+                        </h4>
+                        <p class="text-sm text-gray-600">If the car deviates significantly from the route or brakes abruptly multiple times, the Social Guardian automatically prompts the passenger with an immediate SOS trigger tied to dispatch.</p>
+                    </div>
+                </div>
+
+                <!-- Right: Using User's Custom App Image inside Phone Mockup -->
+                <div class="lg:col-span-5 flex justify-center order-1 lg:order-2 apple-ease reveal-right delay-300">
+                    <div class="mockup-phone relative bg-white transform hover:-translate-y-2 transition-transform duration-500 shadow-[0_40px_80px_rgba(0,0,0,0.2)]">
+                        <div class="mockup-notch z-50"></div>
+                        
+                        <!-- CUSTOM USER IMAGE for App (Switchable via JS) -->
+                        <img id="mobile-app-img" src="https://i.ibb.co.com/fVvrBmZ9/f9218b62-dc28-48a2-a306-4da2ab6e1bf5.jpg" 
+                             alt="JQ Power Mobile Interface" 
+                             class="absolute inset-0 w-full h-full object-cover rounded-[35px] z-0 transition-opacity duration-300" />
+                        
+                        <!-- Optional fade overlay at bottom to blend hardware edges -->
+                        <div class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-black/80 to-transparent rounded-b-[35px] z-10 pointer-events-none"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q&A Footer Section -->
+        <div class="w-full bg-black text-white mt-32 py-24 rounded-t-[4rem]">
+            <div class="max-w-7xl mx-auto px-6">
+                <h2 class="text-[12vw] md:text-[8vw] font-brutal leading-[0.8] tracking-tighter uppercase mb-16 text-center apple-ease reveal-up">
+                    Q & A
+                </h2>
+                
+                <!-- Shortened & Punchy Q&A Grid -->
+                <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-16">
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-theme/50 transition-colors cursor-default apple-ease reveal-left delay-100">
+                        <h4 class="text-theme font-bold text-xl mb-3">Q: Why hardware?</h4>
+                        <p class="text-gray-300 text-base">Apps can't physically hit the brakes. Our hardware ensures 0-latency physical intervention.</p>
+                    </div>
+                    
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-theme/50 transition-colors cursor-default apple-ease reveal-right delay-200">
+                        <h4 class="text-theme font-bold text-xl mb-3">Q: Snow & Fog?</h4>
+                        <p class="text-gray-300 text-base">Acoustic Radar hears tire friction to detect black ice 50m ahead, ignoring visual blind spots.</p>
+                    </div>
+
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-theme/50 transition-colors cursor-default apple-ease reveal-left delay-300">
+                        <h4 class="text-theme font-bold text-xl mb-3">Q: Business Model?</h4>
+                        <p class="text-gray-300 text-base">B2B Hardware-as-a-Service. 16,000 KZT/mo subscription per fleet vehicle.</p>
+                    </div>
+
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-theme/50 transition-colors cursor-default apple-ease reveal-right delay-400">
+                        <h4 class="text-theme font-bold text-xl mb-3">Q: Liability?</h4>
+                        <p class="text-gray-300 text-base">Level 3 assist. The driver remains primarily liable, but overall accident risk is reduced by >85%.</p>
+                    </div>
+                </div>
+
+                <div class="text-center apple-ease reveal-up delay-500">
+                    <p class="text-xl md:text-2xl font-stylized font-medium text-gray-500 mb-8">
+                        Thank you from the <span class="text-theme font-bold">JQ POWER</span> Team.
+                    </p>
+                    <div class="flex justify-center gap-4">
+                        <button class="bg-theme text-black font-black text-sm uppercase tracking-widest px-8 py-4 rounded-full hover:bg-white transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(0,229,63,0.4)]">
+                            View Technical Docs
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Toggle Pitch Scripts Function
+        function toggleScript(id) {
+            const panel = document.getElementById(id);
+            if (panel.classList.contains('open')) {
+                panel.classList.remove('open');
+            } else {
+                // Close others
+                document.querySelectorAll('.script-panel').forEach(p => p.classList.remove('open'));
+                panel.classList.add('open');
+            }
+        }
+
+        // Map Interactive Overlay Logic (Speaker 2)
+        function updateMapOverlay(title, riskLevel, barWidth, barColorClass, textColorClass, nodes, interventions, desc) {
+            document.getElementById('overlay-title').innerText = title;
+            
+            const riskEl = document.getElementById('overlay-risk');
+            riskEl.innerText = riskLevel;
+            riskEl.className = 'font-bold ' + textColorClass;
+            
+            const barEl = document.getElementById('overlay-bar');
+            barEl.style.width = barWidth;
+            barEl.className = 'h-full transition-all duration-700 ' + barColorClass;
+            
+            document.getElementById('overlay-nodes').innerText = nodes;
+            document.getElementById('overlay-interventions').innerText = interventions;
+            document.getElementById('overlay-desc').innerText = desc;
+        }
+
+        // Switch Mobile App Image inside Phone Mockup (Speaker 5)
+        function switchAppImage(url) {
+            const img = document.getElementById('mobile-app-img');
+            // Smooth fade out
+            img.style.opacity = '0';
+            
+            setTimeout(() => {
+                img.src = url;
+                // Fade back in once src is swapped
+                img.style.opacity = '1';
+            }, 150); // matches transition duration in CSS
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Scroll Progress Bar
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById('progress-bar').style.width = scrolled + '%';
+            });
+
+            // 2. Scroll Animations Setup
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .reveal-clip, .reveal-banner').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
